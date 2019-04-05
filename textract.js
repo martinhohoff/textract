@@ -6,20 +6,21 @@ const textract = (input_folder, output_folder, single_output = false) => {
         //read:
         filepath = `./${input_folder}/${file}`
         const contents = fs.readFileSync(filepath, 'utf8');
+        const pureText = contents.replace(/(<([^>]+)>)/ig,"");
     
         // if single output, output is given as arg) 
         // else, name is same as original with txt
         const target = (single_output) ? single_output : `${file.split('.')[0]}.txt`;
         
         // write:
-        fs.appendFile(`${output_folder}/${single_output}`, `${contents}\n`, function(err) {
+        fs.appendFile(`${output_folder}/${single_output}`, `${pureText}\n`, function(err) {
             if(err) {
                 return console.log(err);
             }
 
             console.log(`${file} was extracted in file ${target}!`);
         });
-    }) 
+    })    
 }
 
 // to extract all text to a single file, 

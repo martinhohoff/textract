@@ -1,23 +1,29 @@
-
 const textract = (input_folder, output_folder, single_output = false) => {
     const fs = require('fs');
     const files = fs.readdirSync(`${input_folder}`);
 
-    if (single_output) {
-        // add all output to one sinlge file. name is given as arg 'single_output'
-        files.forEach((file) => {
-            filepath = `./${input_folder}/${file}`
-            const contents = fs.readFileSync(filepath, 'utf8');
-        })
+    files.forEach((file) => {
+        //read:
+        filepath = `./${input_folder}/${file}`
+        const contents = fs.readFileSync(filepath, 'utf8');
+    
+        // if single output, output is given as arg) 
+        // else, name is same as original with txt
+        const target = (single_output) ? single_output : `${file.split('.')[0]}.txt`;
+        
+        // write:
+        fs.appendFile(`${output_folder}/${single_output}`, `${contents}\n`, function(err) {
+            if(err) {
+                return console.log(err);
+            }
 
-    } else {
-        // create one file for every input. name is the same as original file
-        files.forEach((file) => {
-            filepath = `./${input_folder}/${file}`
-            const contents = fs.readFileSync(filepath, 'utf8');
-        })
-    }    
+            console.log(`${file} was extracted in file ${target}!`);
+        });
+    }) 
 }
 
-// to extract all text to a single file, enter output file name as 'single_output'
-textract(input_folder = 'input', output_folder = 'output', single_output = 'result.txt');
+// to extract all text to a single file, 
+// enter an output file name as 'single_output'
+
+// use output folder = '.' to extract to current folder
+textract(input_folder = 'input', output_folder = '.', single_output = 'result.txt');
